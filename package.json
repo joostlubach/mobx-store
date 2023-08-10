@@ -1,0 +1,31 @@
+{
+  "name": "mobx-store",
+  "version": "0.0.1",
+  "description": "Application stores with decorators",
+  "private": true,
+  "author": "Joost Lubach <joostlubach@gmail.com>",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/cjs/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "(pnpm build:prepare && pnpm build:tsc && pnpm build:tsc-alias && pnpm build:copy && pnpm build:rsync); pnpm build:cleanup",
+    "build:prepare": "test -x .build && rm -rf .build; mkdir -p .build",
+    "build:tsc": "tsc -p tsconfig.json --outDir .build/cjs && tsc -p tsconfig.esm.json --outDir .build/esm",
+    "build:tsc-alias": "tsc-alias -p tsconfig.json --outDir .build/cjs && tsc-alias -p tsconfig.esm.json --outDir .build/esm",
+    "build:copy": "copyfiles -u 1 src/**/*.yml src/**/*.css .build/cjs && copyfiles -u 1 src/**/*.yml src/**/*.css .build/esm",
+    "build:rsync": "rsync -uvaz --delete .build/ dist/",
+    "build:cleanup": "rm -rf .build",
+    "clean": "rimraf dist",
+    "test": "NODE_ENV=test jest"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.1",
+    "tsc-alias": "^1.8.7",
+    "typescript": "^5.1.6"
+  }
+}
