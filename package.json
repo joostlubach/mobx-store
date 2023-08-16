@@ -27,6 +27,9 @@
     "clean": "rimraf dist",
     "test": "NODE_ENV=test jest"
   },
+  "peerDependencies": {
+    "mobx": "^6.8.0"
+  },
   "devDependencies": {
     "copyfiles": "^2.4.1",
     "rimraf": "^5.0.1",
