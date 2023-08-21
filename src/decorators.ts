@@ -24,3 +24,18 @@ export function deinit(): MethodDecorator {
     meta.deinits.push(descriptor.value)
   }
 }
+
+// export function persist<T>(key?: string, options: PersistOptions<T> = {}): PropertyDecorator {
+//   return (target: Object, property: string | symbol, descriptor: TypedPropertyDescriptor<T>) => {
+//     if (typeof property !== 'string') { return }
+
+//     const meta = metaFor(target, true)
+//     meta.persists.push({key, property})
+//   }
+// }
+
+// export function rehydrate(key?: string): PropertyDecorator {
+//   return (target, property) => {
+//     persist(key, {rehydate: true})(target, property)
+//   }
+// }
