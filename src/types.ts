@@ -9,6 +9,7 @@ export type RehydrateFunction<Store, State> = (store: Store, state: State) => vo
 export interface StoreMeta {
   inits:    Array<() => void | Promise<void>>
   deinits:  Array<() => void | Promise<void>>
+  stores:   Record<string, StoreConstructor>
   persists: Persist[]
 }
 
@@ -21,8 +22,9 @@ export const StoreMeta: {
   empty: () => StoreMeta
 } = {
   empty: () => ({
-    inits: [],
-    deinits: [],
+    inits:    [],
+    deinits:  [],
+    stores:   {},
     persists: []
   })
 }

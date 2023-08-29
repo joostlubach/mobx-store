@@ -1,5 +1,6 @@
 import { isFunction } from 'lodash'
 import { metaFor } from './meta'
+import { StoreConstructor } from './types'
 
 export function init(): MethodDecorator {
   return (target, propertyKey, descriptor) => {
@@ -22,6 +23,17 @@ export function deinit(): MethodDecorator {
 
     const meta = metaFor(target, true)
     meta.deinits.push(descriptor.value)
+  }
+}
+
+export function store(StoreClass: StoreConstructor): PropertyDecorator {
+  return (target, key) => {
+    if (typeof key !== 'string') {
+      throw new Error(`@store() can only be applied to string-keyed properties`)
+    }
+
+    const meta = metaFor(target, true)
+    meta.stores[key] = StoreClass
   }
 }
 
