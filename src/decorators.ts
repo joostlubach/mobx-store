@@ -26,7 +26,7 @@ export function deinit(): MethodDecorator {
   }
 }
 
-export function store(StoreClass: StoreConstructor): PropertyDecorator {
+export function store<S extends Object>(StoreClass: StoreConstructor<S>): PropertyDecorator {
   return (target, key) => {
     if (typeof key !== 'string') {
       throw new Error(`@store() can only be applied to string-keyed properties`)
