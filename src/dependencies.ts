@@ -1,16 +1,16 @@
 import { objectEntries } from 'ytil'
 import { metaFor } from './meta'
 
-export async function injectDependencies(store: Object, stores: Object[]) {
+export async function injectDependencies(store: Object, getDependency: (Ctor: Function) => any) {
   const meta = metaFor(store, false)
   if (meta == null) { return }
 
-  for (const [key, StoreClass] of objectEntries(meta.stores)) {
-    const injectedStore = stores.find(it => it instanceof StoreClass)
-    if (injectedStore == null) {
-      throw new Error(`Cannot inject store of type \`${StoreClass.name}\` as it is not found`)
+  for (const [key, Ctor] of objectEntries(meta.injects)) {
+    const dependency = getDependency(Ctor)
+    if (dependency == null) {
+      throw new Error(`Cannot inject store of type \`${Ctor.name}\` as it is not found`)
     }
 
-    Object.assign(store, {[key]: injectedStore})
+    Object.assign(store, {[key]: dependency})
   }
 }

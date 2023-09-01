@@ -1,4 +1,5 @@
 export type StoreConstructor<S extends Object> = new () => S
+export type Constructor<T> = new (...args: any[]) => T
 
 export type InitFn = () => void | Promise<void>
 export type DeinitFn = () => void | Promise<void>
@@ -9,7 +10,7 @@ export type RehydrateFunction<Store, State> = (store: Store, state: State) => vo
 export interface StoreMeta {
   inits:    Array<() => void | Promise<void>>
   deinits:  Array<() => void | Promise<void>>
-  stores:   Record<string, StoreConstructor<any>>
+  injects:  Record<string, Function>
   persists: Persist[]
 }
 
@@ -24,7 +25,7 @@ export const StoreMeta: {
   empty: () => ({
     inits:    [],
     deinits:  [],
-    stores:   {},
+    injects:  {},
     persists: []
   })
 }
