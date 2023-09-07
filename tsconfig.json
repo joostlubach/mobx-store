@@ -9,7 +9,6 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "CommonJS",
@@ -22,4 +21,9 @@
   "include": [
     "src"
   ],
+  "references": [
+    {
+      "path": "../ytil/tsconfig.json"
+    }
+  ]
 }
