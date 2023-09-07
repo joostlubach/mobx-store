@@ -7,7 +7,7 @@ export type DeinitFn = () => void | Promise<void>
 export interface StoreMeta {
   inits:    Array<() => void | Promise<void>>
   deinits:  Array<() => void | Promise<void>>
-  injects:  Record<string, Function>
+  injects:  Record<string, [Function, (from: any) => any]>
   persist:  PersistConfig<any, any> | null
 }
 
