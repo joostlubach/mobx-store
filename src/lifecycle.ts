@@ -1,3 +1,4 @@
+import { isFunction } from 'lodash'
 import { metaFor } from './meta'
 
 export async function initStore(store: Object) {
@@ -5,7 +6,10 @@ export async function initStore(store: Object) {
   if (meta == null) { return }
 
   for (const fn of meta.inits) {
-    await fn.call(store)
+    const retval = await fn.call(store)
+    if (isFunction(retval)) {
+      meta.deinits.push(retval)
+    }
   }
 }
 
