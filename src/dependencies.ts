@@ -1,7 +1,8 @@
-import { objectEntries } from 'ytil'
+import { objectEntries, AnyConstructor } from 'ytil'
 import { metaFor } from './meta'
+import { Store } from './types'
 
-export async function injectDependencies(store: Object, getDependency: (Ctor: Function) => any) {
+export async function injectDependencies(store: Store, getDependency: (Ctor: AnyConstructor) => any) {
   const meta = metaFor(store, false)
   if (meta == null) { return }
 

@@ -1,7 +1,8 @@
 import { isFunction } from 'lodash'
 import { metaFor } from './meta'
+import { Store } from './types'
 
-export async function initStore(store: Object) {
+export async function initStore(store: Store) {
   const meta = metaFor(store, false)
   if (meta == null) { return }
 
@@ -13,7 +14,7 @@ export async function initStore(store: Object) {
   }
 }
 
-export async function deinitStore(store: Object) {
+export async function deinitStore(store: Store) {
   const meta = metaFor(store, false)
   if (meta == null) { return }
 

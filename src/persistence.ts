@@ -1,8 +1,8 @@
 import { IReactionDisposer, reaction, runInAction } from 'mobx'
 import { metaFor } from './meta'
-import { HydrateFunction, PersistFunction, StoreConstructor } from './types'
+import { HydrateFunction, PersistFunction, StoreConstructor, Store } from './types'
 
-export function persist<TStore extends Object, TState>(
+export function persist<TStore extends Store, TState>(
   Store: StoreConstructor<TStore>,
   key: string,
   persist: PersistFunction<TStore, TState>,
@@ -12,7 +12,7 @@ export function persist<TStore extends Object, TState>(
   meta.persist = {key, persist, hydrate}
 }
 
-export function persistStores<S extends Record<string, any>>(stores: Object[], state: S, save: (state: S) => void) {
+export function persistStores<S extends Record<string, any>>(stores: Store[], state: S, save: (state: S) => void) {
   const persistedState: S = {...state}
   const disposers: IReactionDisposer[] = []
 
