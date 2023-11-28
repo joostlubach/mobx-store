@@ -1,4 +1,5 @@
-import { objectEntries, AnyConstructor } from 'ytil'
+import { AnyConstructor, objectEntries } from 'ytil'
+
 import { metaFor } from './meta'
 import { Store } from './types'
 

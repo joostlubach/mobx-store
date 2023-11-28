@@ -1,4 +1,5 @@
 import { isFunction } from 'lodash'
+
 import { metaFor } from './meta'
 import { Store } from './types'
 

@@ -1,7 +1,8 @@
 import { isFunction } from 'lodash'
+import { AnyConstructor } from 'ytil'
+
 import { metaFor } from './meta'
 import { Constructor } from './types'
-import { AnyConstructor } from 'ytil'
 
 export function init(): MethodDecorator {
   return (target, propertyKey, descriptor) => {

@@ -1,4 +1,4 @@
-import { StoreMeta, Store } from './types'
+import { Store, StoreMeta } from './types'
 
 const META = new WeakMap<Store, StoreMeta>()
 
