@@ -1,8 +1,7 @@
 import { isFunction } from 'lodash'
-import { AnyConstructor } from 'ytil'
 
 import { metaFor } from './meta'
-import { Constructor } from './types'
+import { Constructor, InjectKey } from './types'
 
 export function init(): MethodDecorator {
   return (target, propertyKey, descriptor) => {
@@ -29,14 +28,14 @@ export function deinit(): MethodDecorator {
 }
 
 export function inject<T, U>(Ctor: Constructor<T>, transform: (from: T) => U): PropertyDecorator
-export function inject(Ctor: AnyConstructor): PropertyDecorator
-export function inject(Ctor: AnyConstructor, transform?: (from: any) => any): PropertyDecorator {
-  return (target, key) => {
-    if (typeof key !== 'string') {
+export function inject(key: InjectKey): PropertyDecorator
+export function inject(key: InjectKey, transform?: (from: any) => any): PropertyDecorator {
+  return (target, prop) => {
+    if (typeof prop !== 'string') {
       throw new Error(`@inject() can only be applied to string-keyed properties`)
     }
 
     const meta = metaFor(target, true)
-    meta.injects[key] = [Ctor, transform ?? (it => it)]
+    meta.injects[prop] = [key, transform ?? (it => it)]
   }
 }

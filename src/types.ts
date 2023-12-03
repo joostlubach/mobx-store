@@ -1,5 +1,3 @@
-import { AnyConstructor } from 'ytil'
-
 export type Store = object
 export type StoreConstructor<S extends Store> = new () => S
 export type Constructor<T> = new (...args: any[]) => T
@@ -7,10 +5,13 @@ export type Constructor<T> = new (...args: any[]) => T
 export type InitFn = () => void | Promise<void>
 export type DeinitFn = () => void | Promise<void>
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type InjectKey = Function
+
 export interface StoreMeta {
   inits:   Array<() => void | Promise<void>>
   deinits: Array<() => void | Promise<void>>
-  injects: Record<string, [AnyConstructor, (from: any) => any]>
+  injects: Record<string, [InjectKey, (from: any) => any]>
   persist: PersistConfig<any, any> | null
 }
 
