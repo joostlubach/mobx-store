@@ -1,7 +1,7 @@
 import { IReactionDisposer, reaction, runInAction } from 'mobx'
 
-import { metaFor } from './meta'
-import { HydrateFunction, PersistFunction, Store, StoreConstructor } from './types'
+import { metaFor } from './meta.js'
+import { HydrateFunction, PersistFunction, Store, StoreConstructor } from './types.js'
 
 export function persist<TStore extends Store, TState>(
   Store: StoreConstructor<TStore>,

@@ -1,7 +1,7 @@
 import { isFunction } from 'lodash'
 
-import { metaFor } from './meta'
-import { Store } from './types'
+import { metaFor } from './meta.js'
+import { Store } from './types.js'
 
 export async function initStore(store: Store) {
   const meta = metaFor(store, false)

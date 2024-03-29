@@ -1,8 +1,8 @@
 import { isFunction } from 'lodash'
 import { objectEntries } from 'ytil'
 
-import { metaFor } from './meta'
-import { InjectKey, Store } from './types'
+import { metaFor } from './meta.js'
+import { InjectKey, Store } from './types.js'
 
 export async function injectDependencies(store: Store, getDependency: (key: InjectKey) => any) {
   const meta = metaFor(store, false)
