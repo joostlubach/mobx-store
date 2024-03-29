@@ -1,7 +1,6 @@
 {
   "name": "mobx-store",
   "version": "0.0.1",
-  "type": "module",
   "description": "Application stores with decorators",
   "private": true,
   "author": "Joost Lubach <joostlubach@gmail.com>",

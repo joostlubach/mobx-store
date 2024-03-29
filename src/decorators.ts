@@ -1,7 +1,7 @@
 import { isFunction } from 'lodash'
 
-import { metaFor } from './meta.js'
-import { Constructor, InjectKey } from './types.js'
+import { metaFor } from './meta'
+import { Constructor, InjectKey } from './types'
 
 export function init(): MethodDecorator {
   return (target, propertyKey, descriptor) => {
