@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo } from 'react-util'
 import { wrapArray } from 'ytil'
-import { deinitStore, initStore } from './lifecycle'
+import { deinitStores, initStores } from './lifecycle'
 import { Store, StoreConstructor } from './types'
 
 export type StoreContext = Store[]
@@ -37,20 +37,14 @@ export const StoreProvider = memo('StoreProvider', (props: StoreProviderProps) =
   React.useEffect(() => {
     if (!initialize) { return }
 
-    const promises = newStores.map(initStore)
-    Promise.all(promises).then(
-      () => onInitialized?.(),
+    initStores(newStores).then(
+      () => { onInitialized?.() },
       error => onInitializationError?.(error)
     )
 
     return () => {
-      newStores
-        .map(store => [store, deinitStore(store)] as const)
-        .map(([store, promise]) => promise.catch(error => {
-          console.error(`Error deinitializing ${store.constructor.name}:`, error)
-        }))
+      deinitStores(newStores)
     }
-
   }, [initialize])
 
   const parent = React.useContext(StoreContext)
