@@ -1,11 +1,10 @@
 export type Store = object
-export type StoreConstructor<S extends Store> = new () => S
+export type StoreConstructor<S extends Store> = new (...args: any[]) => S
 export type Constructor<T> = new (...args: any[]) => T
 
 export type InitFn = () => void | Promise<void>
 export type DeinitFn = () => void | Promise<void>
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type InjectKey = Function
 
 export interface StoreMeta {
