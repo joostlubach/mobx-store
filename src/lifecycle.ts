@@ -8,7 +8,10 @@ export async function initStore(store: Store) {
     const meta = metaFor(store, false)
     if (meta == null) { return }
 
-    for (const fn of meta.inits) {
+    for (const key of meta.inits) {
+      const fn = (store as any)[key]
+      if (!isFunction(fn)) { continue }
+
       const retval = await fn.call(store)
       if (isFunction(retval)) {
         meta.deinits.push(retval)
@@ -28,7 +31,10 @@ export async function deinitStore(store: Store) {
     const meta = metaFor(store, false)
     if (meta == null) { return }
 
-    for (const fn of meta.deinits) {
+    for (const deinit of meta.deinits) {
+      const fn = isFunction(deinit) ? deinit : (store as any)[deinit]
+      if (!isFunction(fn)) { continue }
+
       await fn.call(store)
     }
     return true

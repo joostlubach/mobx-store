@@ -1,6 +1,6 @@
 import { Store, StoreMeta } from './types'
 
-const META = new WeakMap<Store, StoreMeta>()
+const META = new Map<Store, StoreMeta>()
 
 export function metaFor(store: Store, createIfNotFound: false): StoreMeta | undefined
 export function metaFor(store: Store, createIfNotFound: true): StoreMeta
@@ -13,4 +13,8 @@ export function metaFor(store: Store, createIfNotFound: boolean) {
   }
 
   return meta
+}
+
+export function allStores() {
+  return Array.from(META.keys())
 }
