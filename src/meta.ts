@@ -14,7 +14,3 @@ export function metaFor(store: Store, createIfNotFound: boolean) {
 
   return meta
 }
-
-export function allStores() {
-  return Array.from(META.keys())
-}
