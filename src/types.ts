@@ -31,7 +31,7 @@ export const StoreMeta: {
 export interface PersistConfig<TStore extends Store, TState> {
   key:     string
   persist: PersistFunction<TStore, TState>
-  hydrate: HydrateFunction<TStore, TState>
+  restore: HydrateFunction<TStore, TState>
 }
 
 export type PersistFunction<TStore extends Store, TState> = (store: TStore) => TState
