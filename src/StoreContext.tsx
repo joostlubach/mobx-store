@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { memo } from 'react-util'
 import { wrapArray } from 'ytil'
+
 import { deinitStores, initStores } from './lifecycle'
 import { Store, StoreConstructor } from './types'
 
@@ -11,9 +12,10 @@ export interface StoreProviderProps {
   store?: Store | Store[]
   Store?: StoreConstructor<Store> | StoreConstructor<Store>[]
 
-  initialize?: boolean
-  onInitialized?: () => any
+  initialize?:            boolean
+  onInitialized?:         () => any
   onInitializationError?: (error: Error) => any
+  initializationTimeout?: number
 
   children?: React.ReactNode
 }
@@ -26,18 +28,19 @@ export const StoreProvider = memo('StoreProvider', (props: StoreProviderProps) =
     initialize = true,
     onInitialized,
     onInitializationError,
-    children
+    initializationTimeout,
+    children,
   } = props
 
   const newStores = React.useMemo(() => [
     ...wrapArray(store ?? []),
-    ...wrapArray(Store ?? []).map(Store => new Store())    
-  ], [])
+    ...wrapArray(Store ?? []).map(Store => new Store()),    
+  ], [Store, store])
 
   React.useEffect(() => {
     if (!initialize) { return }
 
-    initStores(newStores).then(
+    initStores(newStores, initializationTimeout).then(
       () => { onInitialized?.() },
       error => onInitializationError?.(error)
     )
@@ -45,10 +48,10 @@ export const StoreProvider = memo('StoreProvider', (props: StoreProviderProps) =
     return () => {
       deinitStores(newStores)
     }
-  }, [initialize])
+  }, [initializationTimeout, initialize, newStores, onInitializationError, onInitialized])
 
   const parent = React.useContext(StoreContext)
-  const context = React.useMemo((): StoreContext => [...parent, ...newStores], [])
+  const context = React.useMemo((): StoreContext => [...parent, ...newStores], [newStores, parent])
 
   return (
     <StoreContext.Provider value={context}>
