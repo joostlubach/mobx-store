@@ -1,5 +1,5 @@
 import { Store } from 'mobx-store'
-import { isFunction } from '../../ytil/src/functions'
+import { isFunction } from 'ytil'
 import { metaFor } from './meta'
 import { StoreEvent } from './types'
 
