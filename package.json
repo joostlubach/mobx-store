@@ -17,12 +17,6 @@
     "mobx": "^6.10",
     "react": "^18.0"
   },
-  "devDependencies": {
-    "copyfiles": "^2.4.1",
-    "rimraf": "^5.0.5",
-    "tsc-alias": "^1.8.8",
-    "typescript": "5.4.3"
-  },
   "dependencies": {
     "mobx": "^6.12.3",
     "ytil": "workspace:^"
