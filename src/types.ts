@@ -1,6 +1,11 @@
 
 export type Store = object
-export type StoreConstructor<S extends Store> = new (...args: any[]) => S
+
+export interface StoreConstructor<S extends Store> {
+  new (...args: any[]): S
+  name: string
+}
+
 export type Constructor<T> = new (...args: any[]) => T
 
 export type InitFn = () => void | Promise<void>
