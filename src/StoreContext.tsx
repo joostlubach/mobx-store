@@ -1,8 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as React from 'react'
 import { memo } from 'react-util'
 import { wrapArray } from 'ytil'
 
+import { injectDependencies } from './dependencies'
 import { deinitStores, initStores } from './lifecycle'
+import { persistStores } from './persistence'
 import { Store, StoreConstructor } from './types'
 
 export type StoreContext = Store[]
@@ -40,11 +43,24 @@ export const StoreProvider = memo('StoreProvider', (props: StoreProviderProps) =
   React.useEffect(() => {
     if (!initialize) { return }
 
-    initStores(newStores, initializationTimeout).then(
-      () => { onInitialized?.() },
-      error => onInitializationError?.(error)
-    )
+    const init = async () => {
 
+      const state = JSON.parse(await AsyncStorage.getItem('state') ?? '{}')
+      persistStores(newStores, state, state => {
+        AsyncStorage.setItem('state', JSON.stringify(state))
+      })
+
+      initStores(newStores, initializationTimeout).then(
+        () => { onInitialized?.() },
+        error => onInitializationError?.(error)
+      )
+
+      for (const store of newStores) {
+        injectDependencies(store, Store => newStores.find(it => it instanceof Store))
+      }
+    }
+
+    init()
     return () => {
       deinitStores(newStores)
     }
