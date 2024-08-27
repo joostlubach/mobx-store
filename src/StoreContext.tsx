@@ -1,8 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as React from 'react'
 import { memo } from 'react-util'
 import { wrapArray } from 'ytil'
-
+import config from './config'
 import { injectDependencies } from './dependencies'
 import { deinitStores, initStores } from './lifecycle'
 import { persistStores } from './persistence'
@@ -45,9 +44,9 @@ export const StoreProvider = memo('StoreProvider', (props: StoreProviderProps) =
 
     const init = async () => {
 
-      const state = JSON.parse(await AsyncStorage.getItem('state') ?? '{}')
+      const state = JSON.parse(await config.storage?.getItem('state') ?? '{}')
       persistStores(newStores, state, state => {
-        AsyncStorage.setItem('state', JSON.stringify(state))
+        config.storage?.setItem('state', JSON.stringify(state))
       })
 
       initStores(newStores, initializationTimeout).then(
