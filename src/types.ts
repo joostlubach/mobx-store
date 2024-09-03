@@ -5,8 +5,7 @@ export type Constructor<T> = new (...args: any[]) => T
 export type InitFn = () => void | Promise<void>
 export type DeinitFn = () => void | Promise<void>
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type InjectKey = Function
+export type InjectKey = Function | string
 
 export interface StoreMeta {
   inits:   Array<() => void | Promise<void>>
