@@ -55,7 +55,13 @@ export const StoreProvider = memo('StoreProvider', (props: StoreProviderProps) =
       )
 
       for (const store of newStores) {
-        injectDependencies(store, Store => newStores.find(it => it instanceof Store))
+        injectDependencies(store, key => {
+          if (typeof key === 'string') {
+            return newStores.find(it => it.constructor.name === key)
+          } else {
+            return newStores.find(it => it instanceof key)
+          }
+        })
       }
     }
 
