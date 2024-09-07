@@ -1,7 +1,7 @@
-import { Store } from 'mobx-store'
 import { isFunction } from 'ytil'
+
 import { metaFor } from './meta'
-import { StoreEvent } from './types'
+import { Store, StoreEvent } from './types'
 
 const allStores = new Set<Store>()
 
