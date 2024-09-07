@@ -1,6 +1,7 @@
-import { StoreConstructor } from 'mobx-store'
 import * as React from 'react'
+
 import { StoreContext } from './StoreContext'
+import { StoreConstructor } from './types'
 
 export function useStore<C extends StoreConstructor<any>>(Store: C): InstanceType<C> {
   const stores = React.useContext(StoreContext)
