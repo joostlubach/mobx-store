@@ -25,7 +25,7 @@
     "test": "NODE_ENV=test jest"
   },
   "peerDependencies": {
-    "mobx": "^6.10.2"
+    "mobx": ">=6.0.0"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
@@ -34,7 +34,6 @@
     "typescript": "5.4.3"
   },
   "dependencies": {
-    "mobx": "^6.12.3",
     "ytil": "workspace:^"
   }
 }
