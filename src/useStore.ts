@@ -1,5 +1,4 @@
-import * as React from 'react'
-
+import React from 'react'
 import { StoreContext } from './StoreContext'
 import { StoreConstructor } from './types'
 

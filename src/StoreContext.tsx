@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { memo } from 'react-util'
 import { wrapArray } from 'ytil'
 import config from './config'
