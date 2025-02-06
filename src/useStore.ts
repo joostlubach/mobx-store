@@ -1,5 +1,6 @@
 import React from 'react'
 import { StoreContext } from './StoreContext'
+import { storeName } from './meta'
 import { StoreConstructor } from './types'
 
 export function useStore<C extends StoreConstructor<any>>(Store: C): InstanceType<C> {
@@ -17,7 +18,7 @@ export class StoreNotFoundError extends Error {
   constructor(
     public readonly Store: StoreConstructor<any>
   ) {
-    super(`Store not found: ${Store.name}`)
+    super(`Store not found: ${storeName(Store)}`)
   }
 
 }

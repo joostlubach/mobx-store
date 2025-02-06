@@ -6,6 +6,7 @@ export * from './persistence'
 
 export * from './StoreContext'
 export * from './useStore'
+export * from './meta'
 
 export { configure } from './config'
 export * from './types'

@@ -1,6 +1,6 @@
 import { IReactionDisposer, reaction, runInAction } from 'mobx'
 import config from './config'
-import { metaFor } from './meta'
+import { metaFor, storeName } from './meta'
 import { HydrateFunction, PersistFunction, Store, StoreConstructor } from './types'
 
 export function persist<TStore extends Store, TState>(
@@ -26,7 +26,7 @@ export function persistStores<S extends Record<string, any>>(stores: Store[], st
 
       const storeState = persistedState[key]
       if (storeState != null) {
-        config.logger.debug(`Restoring persisted state of ${store.constructor.name}`, storeState)
+        config.logger.debug(`Restoring persisted state of ${storeName(store)}`, storeState)
 
         restore(store, storeState)
       }

@@ -14,6 +14,7 @@ export type DeinitFn = () => void | Promise<void>
 export type InjectKey = Function | string
 
 export interface StoreMeta {
+  name?:    string
   inits:    Array<string | symbol>
   deinits:  Array<string | symbol | DeinitFn>
   injects:  Record<string, [InjectKey, (from: any) => any]>

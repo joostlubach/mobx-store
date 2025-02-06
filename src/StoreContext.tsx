@@ -4,6 +4,7 @@ import { wrapArray } from 'ytil'
 import config from './config'
 import { injectDependencies } from './dependencies'
 import { deinitStores, initStores } from './lifecycle'
+import { storeName } from './meta'
 import { persistStores } from './persistence'
 import { Store, StoreConstructor } from './types'
 
@@ -57,7 +58,7 @@ export const StoreProvider = memo('StoreProvider', (props: StoreProviderProps) =
       for (const store of newStores) {
         injectDependencies(store, key => {
           if (typeof key === 'string') {
-            return newStores.find(it => it.constructor.name === key)
+            return newStores.find(it => storeName(it) === key)
           } else {
             return newStores.find(it => it instanceof key)
           }

@@ -1,6 +1,6 @@
 import { isFunction } from 'lodash'
 import config from './config'
-import { metaFor } from './meta'
+import { metaFor, storeName } from './meta'
 import { Store } from './types'
 
 export async function initStore(store: Store) {
@@ -17,10 +17,10 @@ export async function initStore(store: Store) {
         meta.deinits.push(retval)
       }
     }
-    config.logger.debug(`Initialized ${store.constructor.name}`)
+    config.logger.debug(`Initialized ${storeName(store)}`)
     return true
   } catch (error) {
-    config.logger.error(`Error while initializing ${store.constructor.name}`, [error])
+    config.logger.error(`Error while initializing ${storeName(store)}`, [error])
     return false
   }
 }
@@ -38,7 +38,7 @@ export async function deinitStore(store: Store) {
     }
     return true
   } catch (error) {
-    config.logger.error(`Error while deinitializing ${store.constructor.name}`)
+    config.logger.error(`Error while deinitializing ${storeName(store)}`)
     config.logger.error(error)
     return false
   }
@@ -48,7 +48,7 @@ export async function initStores(stores: Store[], timeout: number = 5000): Promi
   const promises = stores.map(store => runAsyncWithTimeout(
     () => initStore(store),
     timeout,
-    `Init of ${store.constructor.name} timed out`
+    `Init of ${storeName(store)} timed out`
   ))
 
   const results = await Promise.all(promises)
@@ -59,7 +59,7 @@ export async function deinitStores(stores: Store[], timeout: number = 5000): Pro
   const promises = stores.map(store => runAsyncWithTimeout(
     () => deinitStore(store),
     timeout,
-    `Deinit of ${store.constructor.name} timed out`
+    `Deinit of ${storeName(store)} timed out`
   ))
 
   const results = await Promise.all(promises)
