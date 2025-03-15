@@ -2,8 +2,8 @@ import { isFunction, merge } from 'lodash'
 import { DeepPartial } from 'ytil'
 
 export interface Config {
-  logger:   LoggerInterface
-  storage?: SyncStorage | AsyncStorage
+  logger:  LoggerInterface
+  storage: SyncStorage | AsyncStorage
 }
 
 export interface LoggerInterface {
@@ -15,18 +15,21 @@ export interface LoggerInterface {
 }
 
 export interface SyncStorage {
-  getItem(key: string): string | null
-  setItem(key: string, value: string): void
+  getItem<T>(key: string): unknown | null
+  setItem(key: string, value: unknown): void
 }
 
 export interface AsyncStorage {
-  getItem(key: string): Promise<string | null>
-  setItem(key: string, value: string): Promise<void>
+  getItem<T>(key: string): Promise<unknown | null>
+  setItem(key: string, value: unknown): Promise<void>
 }
 
 const config: Config = {
   logger:  console,
-  storage: undefined,
+  storage: {
+    getItem: key => localStorage.getItem(key),
+    setItem: (key, value) => { localStorage.setItem(key, JSON.stringify(value)) },
+  },
 }
 
 export default config

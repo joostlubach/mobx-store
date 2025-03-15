@@ -1,6 +1,6 @@
-import { IReactionDisposer, reaction, runInAction } from 'mobx'
+import { reaction, runInAction } from 'mobx'
 import config from './config'
-import { metaFor, storeName } from './meta'
+import { metaFor } from './meta'
 import { HydrateFunction, PersistFunction, Store, StoreConstructor } from './types'
 
 export function persist<TStore extends Store, TState>(
@@ -13,36 +13,30 @@ export function persist<TStore extends Store, TState>(
   meta.persist = {key, persist, restore: hydrate}
 }
 
-export function persistStores<S extends Record<string, any>>(stores: Store[], state: S, save: (state: S) => void) {
-  const persistedState: S = {...state}
-  const disposers: IReactionDisposer[] = []
+export async function persistStores(stores: Store[]) {
+  const promises = stores.map(loadPersistedStore)
+  await Promise.all(promises)
 
-  runInAction(() => {
-    for (const store of stores) {
-      const meta = metaFor(store, false)
-      if (meta?.persist == null) { continue }
+  stores.forEach(autopersistStore)
+}
 
-      const {key, restore} = meta.persist
+async function loadPersistedStore(store: Store) {
+  const meta = metaFor(store, false)
+  if (meta?.persist == null) { return null }
 
-      const storeState = persistedState[key]
-      if (storeState != null) {
-        config.logger.debug(`Restoring persisted state of ${storeName(store)}`, storeState)
+  const {key, restore} = meta.persist
+  const state = await config.storage.getItem(key)
+  if (state == null) { return null }
 
-        restore(store, storeState)
-      }
-    }
+  runInAction(() => restore(store, state))
+}
+
+function autopersistStore(store: Store) {
+  const meta = metaFor(store, false)
+  if (meta?.persist == null) { return null }
+
+  const {key, persist} = meta.persist
+  return reaction(() => persist(store), state => {
+    config.storage.setItem(key, state)
   })
-
-  for (const store of stores) {
-    const meta = metaFor(store, false)
-    if (meta?.persist == null) { continue }
-
-    const {key, persist} = meta.persist
-    disposers.push(reaction(() => persist(store), state => {
-      Object.assign(persistedState, {[key]: state})
-      save(persistedState)
-    }))
-  }
-
-  return disposers
 }
