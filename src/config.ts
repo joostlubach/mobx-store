@@ -16,12 +16,12 @@ export interface LoggerInterface {
 }
 
 export interface SyncStorage {
-  getItem<T>(key: string): object | null
+  getItem(key: string): object | null
   setItem(key: string, value: object): void
 }
 
 export interface AsyncStorage {
-  getItem<T>(key: string): Promise<object | null>
+  getItem(key: string): Promise<object | null>
   setItem(key: string, value: object): Promise<void>
 }
 
