@@ -8,7 +8,7 @@ export class IndexedDBStorage implements AsyncStorage {
   ) {}
 
   public async init() {
-    this.openDatabase()
+    await this.openDatabase()
   }
 
   // #region Open
