@@ -1,13 +1,13 @@
 import { reaction, runInAction } from 'mobx'
 import config from './config'
 import { metaFor } from './meta'
-import { HydrateFunction, PersistFunction, Store, StoreConstructor } from './types'
+import { PersistFunction, RestoreFunction, Store, StoreConstructor } from './types'
 
 export function persist<TStore extends Store, TState>(
   Store: StoreConstructor<TStore>,
   key: string,
   persist: PersistFunction<TStore, TState>,
-  hydrate: HydrateFunction<TStore, TState>,
+  hydrate: RestoreFunction<TStore, TState>,
 ) {
   const meta = metaFor(Store, true)
   meta.persist = {key, persist, restore: hydrate}

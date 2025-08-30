@@ -37,11 +37,11 @@ export const StoreMeta: {
 export interface PersistConfig<TStore extends Store, TState> {
   key:     string
   persist: PersistFunction<TStore, TState>
-  restore: HydrateFunction<TStore, TState>
+  restore: RestoreFunction<TStore, TState>
 }
 
-export type PersistFunction<TStore extends Store, TState> = (store: TStore) => TState
-export type HydrateFunction<TStore extends Store, TState> = (store: TStore, state: TState) => void
+export type PersistFunction<TStore extends Store, TState> = (store: TStore) => TState | Promise<TState>
+export type RestoreFunction<TStore extends Store, TState> = (store: TStore, state: TState) => void
 
 export type StoreEvent = keyof {[K in keyof StoreEventMap as true extends StoreEventMap[K] ? K : never]: any}
 
