@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash'
+import { isArray, isFunction } from 'lodash'
 import config from './config'
 import { metaFor, storeName } from './meta'
 import { Store } from './types'
@@ -15,6 +15,8 @@ export async function initStore(store: Store) {
       const retval = await fn.call(store)
       if (isFunction(retval)) {
         meta.deinits.push(retval)
+      } else if (isArray(retval) && retval.every(isFunction)) {
+        meta.deinits.push(...retval)
       }
     }
     config.logger.debug(`Initialized ${storeName(store)}`)

@@ -1,3 +1,4 @@
+export * from './App'
 export * from './decorators'
 export * from './lifecycle'
 export * from './dependencies'
