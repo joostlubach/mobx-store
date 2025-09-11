@@ -3,16 +3,7 @@ import { DeepPartial } from 'ytil'
 import { LocalStorage } from './storage'
 
 export interface Config {
-  logger:  LoggerInterface
   storage: SyncStorage | AsyncStorage
-}
-
-export interface LoggerInterface {
-  log(...args: any[]): void
-  error(...args: any[]): void
-  warn(...args: any[]): void
-  info(...args: any[]): void
-  debug(...args: any[]): void
 }
 
 export interface SyncStorage {
@@ -26,7 +17,6 @@ export interface AsyncStorage {
 }
 
 const config: Config = {
-  logger:  console,
   storage: new LocalStorage(),
 }
 

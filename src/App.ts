@@ -51,7 +51,7 @@ export class App {
     await persistStores(this.stores)
     
     // Then, initialize all stores.
-    const initialized = await initStores(this.stores)
+    const initialized = await initStores(this.stores, this.logger)
     if (initialized) {
       this.logger.info('Initialized')
     }
@@ -69,7 +69,7 @@ export class App {
     this.disposers.forEach(it => it())
     this.disposers = []
 
-    return await deinitStores(this.stores)
+    return await deinitStores(this.stores, this.logger)
   }
 
   // #endregion

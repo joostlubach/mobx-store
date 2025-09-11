@@ -1,9 +1,9 @@
 import { isArray, isFunction } from 'lodash'
-import config from './config'
+import Logger from 'logger'
 import { metaFor, storeName } from './meta'
 import { Store } from './types'
 
-export async function initStore(store: Store) {
+export async function initStore(store: Store, logger?: Logger) {
   try {
     const meta = metaFor(store, false)
     if (meta == null) { return true }
@@ -19,15 +19,15 @@ export async function initStore(store: Store) {
         meta.deinits.push(...retval)
       }
     }
-    config.logger.debug(`Initialized ${storeName(store)}`)
+    logger?.debug(`Initialized ${storeName(store)}`)
     return true
   } catch (error) {
-    config.logger.error(`Error while initializing ${storeName(store)}`, [error])
+    logger?.error(`Error while initializing ${storeName(store)}`, [error])
     return false
   }
 }
 
-export async function deinitStore(store: Store) {
+export async function deinitStore(store: Store, logger?: Logger) {
   try {
     const meta = metaFor(store, false)
     if (meta == null) { return true }
@@ -40,35 +40,36 @@ export async function deinitStore(store: Store) {
     }
     return true
   } catch (error) {
-    config.logger.error(`Error while deinitializing ${storeName(store)}`)
-    config.logger.error(error)
+    logger?.error(`Error while deinitializing ${storeName(store)}`, error)
     return false
   }
 }
 
-export async function initStores(stores: Store[], timeout: number = 5000): Promise<boolean> {
+export async function initStores(stores: Store[], logger?: Logger, timeout: number = 5000): Promise<boolean> {
   const promises = stores.map(store => runAsyncWithTimeout(
-    () => initStore(store),
+    () => initStore(store, logger),
     timeout,
-    `Init of ${storeName(store)} timed out`
+    `Init of ${storeName(store)} timed out`,
+    logger
   ))
 
   const results = await Promise.all(promises)
   return results.every(it => it)
 }
 
-export async function deinitStores(stores: Store[], timeout: number = 5000): Promise<boolean> {
+export async function deinitStores(stores: Store[], logger?: Logger, timeout: number = 5000): Promise<boolean> {
   const promises = stores.map(store => runAsyncWithTimeout(
-    () => deinitStore(store),
+    () => deinitStore(store, logger),
     timeout,
-    `Deinit of ${storeName(store)} timed out`
+    `Deinit of ${storeName(store)} timed out`,
+    logger
   ))
 
   const results = await Promise.all(promises)
   return results.every(it => it)
 }
 
-function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: string): Promise<boolean> {
+function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: string, logger?: Logger): Promise<boolean> {
   return new Promise((resolve, reject) => {
     let resolved: boolean = false
 
@@ -80,7 +81,7 @@ function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: s
 
     const onTimeout = () => {
       if (resolved) { return }
-      config.logger.error(message)
+      logger?.error(message)
       resolved = true
       resolve(false)
     }
