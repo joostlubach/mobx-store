@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash'
 import { reaction, runInAction } from 'mobx'
 import config from './config'
 import { metaFor } from './meta'
@@ -37,6 +38,7 @@ function autopersistStore(store: Store) {
 
   const {key, persist} = meta.persist
   return reaction(() => persist(store), state => {
-    config.storage.setItem(key, state)
+    // Do cloneDeep to ensure we don't store any observables.
+    config.storage.setItem(key, cloneDeep(state))
   })
 }
