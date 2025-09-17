@@ -3,6 +3,29 @@ import Logger from 'logger'
 import { metaFor, storeName } from './meta'
 import { Store } from './types'
 
+export async function preinitStore(store: Store, logger?: Logger) {
+  try {
+    const meta = metaFor(store, false)
+    if (meta == null) { return }
+    if (meta.preinits.length === 0) { return }
+
+    for (const key of meta.preinits) {
+      const fn = (store as any)[key]
+      if (!isFunction(fn)) { continue }
+
+      const retval = await fn.call(store)
+      if (isFunction(retval)) {
+        meta.deinits.push(retval)
+      } else if (isArray(retval) && retval.every(isFunction)) {
+        meta.deinits.push(...retval)
+      }
+    }
+    logger?.debug(`Pre-initialized ${storeName(store)}`)
+  } catch (error) {
+    logger?.error(`Error while pre-initializing ${storeName(store)}`, [error])
+  }
+}
+
 export async function initStore(store: Store, logger?: Logger) {
   try {
     const meta = metaFor(store, false)
@@ -46,6 +69,14 @@ export async function deinitStore(store: Store, logger?: Logger) {
 }
 
 export async function initStores(stores: Store[], logger?: Logger, timeout: number = 5000): Promise<boolean> {
+  const preInitPromises = stores.map(store => runAsyncWithTimeout(
+    () => preinitStore(store, logger),
+    timeout,
+    `Pre-init of ${storeName(store)} timed out`,
+    logger
+  ))
+  await Promise.all(preInitPromises)
+
   const promises = stores.map(store => runAsyncWithTimeout(
     () => initStore(store, logger),
     timeout,

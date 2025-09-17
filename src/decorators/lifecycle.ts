@@ -1,6 +1,18 @@
 import { isFunction } from 'lodash'
 import { metaFor } from '../meta'
 
+export function preinit(): MethodDecorator {
+  return (target, propertyKey, descriptor) => {
+    if (descriptor.value == null) { return }
+    if (!isFunction(descriptor.value)) {
+      throw new Error("preinit() can only be placed on functions")
+    }
+
+    const meta = metaFor(target, true)
+    meta.preinits.push(propertyKey)
+  }
+}
+
 export function init(): MethodDecorator {
   return (target, propertyKey, descriptor) => {
     if (descriptor.value == null) { return }

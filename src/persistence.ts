@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash'
-import { reaction, runInAction } from 'mobx'
+import { action, reaction, runInAction } from 'mobx'
 import config from './config'
 import { metaFor } from './meta'
 import { PersistFunction, RestoreFunction, Store, StoreConstructor } from './types'
@@ -19,16 +19,28 @@ export async function persistStores(stores: Store[]) {
   await Promise.all(promises)
 
   stores.forEach(autopersistStore)
+  config.storage.addListener?.(action(state => {
+    for (const store of stores) {
+      const meta = metaFor(store, false)
+      if (meta?.persist == null) { continue }
+
+      const {key, restore} = meta.persist
+      const storeState = (state as any)[key]
+      if (storeState != null) {
+        runInAction(() => restore(store, storeState))
+      }
+    }
+  }))
 }
 
 async function loadPersistedStore(store: Store) {
   const meta = metaFor(store, false)
   if (meta?.persist == null) { return null }
-
+  
   const {key, restore} = meta.persist
   const state = await config.storage.getItem(key)
   if (state == null) { return null }
-
+  
   runInAction(() => restore(store, state))
 }
 

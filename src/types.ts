@@ -15,6 +15,7 @@ export type InjectKey = Function | string
 
 export interface StoreMeta {
   name?:    string
+  preinits: Array<string | symbol>
   inits:    Array<string | symbol>
   deinits:  Array<string | symbol | DeinitFn>
   injects:  Record<string, [InjectKey, (from: any) => any]>
@@ -26,6 +27,7 @@ export const StoreMeta: {
   empty: () => StoreMeta
 } = {
   empty: () => ({
+    preinits: [],
     inits:    [],
     deinits:  [],
     injects:  {},

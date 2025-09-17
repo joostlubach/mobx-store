@@ -9,11 +9,13 @@ export interface Config {
 export interface SyncStorage {
   getItem(key: string): object | null
   setItem(key: string, value: object): void
+  addListener?(listener: (state: object) => void): void
 }
 
 export interface AsyncStorage {
   getItem(key: string): Promise<object | null>
   setItem(key: string, value: object): Promise<void>
+  addListener?(listener: (state: object) => void): void
 }
 
 const config: Config = {
