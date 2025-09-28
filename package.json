@@ -4,13 +4,24 @@
   "description": "Application stores with decorators",
   "private": true,
   "author": "Joost Lubach <joostlubach@gmail.com>",
-  "main": "./src/index.ts",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/cjs/index.js"
+    }
   },
   "scripts": {
-    "lint": "eslint src --ext .ts",
+    "build": "npm run clean && npm run build:tsc",
+    "build:tsc": "npm run build:tsc:esm && npm run build:tsc:cjs",
+    "build:tsc:esm": "tsc -p tsconfig.prod.json --module esnext --outDir dist/esm --declarationDir dist/types",
+    "build:tsc:cjs": "tsc -p tsconfig.prod.json --module commonjs --outDir dist/cjs --declaration false --declarationMap false",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "lint": "eslint src --ext ts,tsx",
+    "check": "tsc -p . --noEmit",
     "test": "NODE_ENV=test jest"
   },
   "peerDependencies": {
@@ -20,7 +31,7 @@
     "copyfiles": "^2.4.1",
     "rimraf": "^5.0.5",
     "tsc-alias": "^1.8.8",
-    "typescript": "5.4.3"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "ytil": "workspace:^"
