@@ -1,9 +1,32 @@
-import { isFunction } from 'lodash'
-import config from './config'
-import { metaFor } from './meta'
+import { isArray, isFunction } from 'lodash'
+import Logger from 'logger'
+import { metaFor, storeName } from './meta'
 import { Store } from './types'
 
-export async function initStore(store: Store) {
+export async function preinitStore(store: Store, logger?: Logger) {
+  try {
+    const meta = metaFor(store, false)
+    if (meta == null) { return }
+    if (meta.preinits.length === 0) { return }
+
+    for (const key of meta.preinits) {
+      const fn = (store as any)[key]
+      if (!isFunction(fn)) { continue }
+
+      const retval = await fn.call(store)
+      if (isFunction(retval)) {
+        meta.deinits.push(retval)
+      } else if (isArray(retval) && retval.every(isFunction)) {
+        meta.deinits.push(...retval)
+      }
+    }
+    logger?.debug(`Pre-initialized ${storeName(store)}`)
+  } catch (error) {
+    logger?.error(`Error while pre-initializing ${storeName(store)}`, [error])
+  }
+}
+
+export async function initStore(store: Store, logger?: Logger) {
   try {
     const meta = metaFor(store, false)
     if (meta == null) { return true }
@@ -15,17 +38,19 @@ export async function initStore(store: Store) {
       const retval = await fn.call(store)
       if (isFunction(retval)) {
         meta.deinits.push(retval)
+      } else if (isArray(retval) && retval.every(isFunction)) {
+        meta.deinits.push(...retval)
       }
     }
-    config.logger.debug(`Initialized ${store.constructor.name}`)
+    logger?.debug(`Initialized ${storeName(store)}`)
     return true
   } catch (error) {
-    config.logger.error(`Error while initializing ${store.constructor.name}`, [error])
+    logger?.error(`Error while initializing ${storeName(store)}`, [error])
     return false
   }
 }
 
-export async function deinitStore(store: Store) {
+export async function deinitStore(store: Store, logger?: Logger) {
   try {
     const meta = metaFor(store, false)
     if (meta == null) { return true }
@@ -38,35 +63,44 @@ export async function deinitStore(store: Store) {
     }
     return true
   } catch (error) {
-    config.logger.error(`Error while deinitializing ${store.constructor.name}`)
-    config.logger.error(error)
+    logger?.error(`Error while deinitializing ${storeName(store)}`, error)
     return false
   }
 }
 
-export async function initStores(stores: Store[], timeout: number = 5000): Promise<boolean> {
-  const promises = stores.map(store => runAsyncWithTimeout(
-    () => initStore(store),
+export async function initStores(stores: Store[], logger?: Logger, timeout: number = 5000): Promise<boolean> {
+  const preInitPromises = stores.map(store => runAsyncWithTimeout(
+    () => preinitStore(store, logger),
     timeout,
-    `Init of ${store.constructor.name} timed out`
+    `Pre-init of ${storeName(store)} timed out`,
+    logger
+  ))
+  await Promise.all(preInitPromises)
+
+  const promises = stores.map(store => runAsyncWithTimeout(
+    () => initStore(store, logger),
+    timeout,
+    `Init of ${storeName(store)} timed out`,
+    logger
   ))
 
   const results = await Promise.all(promises)
   return results.every(it => it)
 }
 
-export async function deinitStores(stores: Store[], timeout: number = 5000): Promise<boolean> {
+export async function deinitStores(stores: Store[], logger?: Logger, timeout: number = 5000): Promise<boolean> {
   const promises = stores.map(store => runAsyncWithTimeout(
-    () => deinitStore(store),
+    () => deinitStore(store, logger),
     timeout,
-    `Deinit of ${store.constructor.name} timed out`
+    `Deinit of ${storeName(store)} timed out`,
+    logger
   ))
 
   const results = await Promise.all(promises)
   return results.every(it => it)
 }
 
-function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: string): Promise<boolean> {
+function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: string, logger?: Logger): Promise<boolean> {
   return new Promise((resolve, reject) => {
     let resolved: boolean = false
 
@@ -78,7 +112,7 @@ function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: s
 
     const onTimeout = () => {
       if (resolved) { return }
-      config.logger.error(message)
+      logger?.error(message)
       resolved = true
       resolve(false)
     }

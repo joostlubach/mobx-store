@@ -1,32 +1,25 @@
 import { isFunction, merge } from 'lodash'
 import { DeepPartial } from 'ytil'
+import { LocalStorage } from './storage'
 
 export interface Config {
-  logger:   LoggerInterface
-  storage?: SyncStorage | AsyncStorage
-}
-
-export interface LoggerInterface {
-  log(...args: any[]): void
-  error(...args: any[]): void
-  warn(...args: any[]): void
-  info(...args: any[]): void
-  debug(...args: any[]): void
+  storage: SyncStorage | AsyncStorage
 }
 
 export interface SyncStorage {
-  getItem(key: string): string | null
-  setItem(key: string, value: string): void
+  getItem(key: string): object | null
+  setItem(key: string, value: object): void
+  addListener?(listener: (state: object) => void): void
 }
 
 export interface AsyncStorage {
-  getItem(key: string): Promise<string | null>
-  setItem(key: string, value: string): Promise<void>
+  getItem(key: string): Promise<object | null>
+  setItem(key: string, value: object): Promise<void>
+  addListener?(listener: (state: object) => void): void
 }
 
 const config: Config = {
-  logger:  console,
-  storage: undefined,
+  storage: new LocalStorage(),
 }
 
 export default config

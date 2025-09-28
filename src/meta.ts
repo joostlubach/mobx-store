@@ -1,4 +1,4 @@
-import { Store, StoreMeta } from './types'
+import { Store, StoreConstructor, StoreMeta } from './types'
 
 const META = new Map<Store, StoreMeta>()
 
@@ -13,4 +13,9 @@ export function metaFor(store: Store, createIfNotFound: boolean) {
   }
 
   return meta
+}
+
+export function storeName(store: Store | StoreConstructor<any>) {
+  const StoreClass = store instanceof Function ? store : store.constructor
+  return metaFor(StoreClass, true).name
 }
