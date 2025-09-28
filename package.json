@@ -28,6 +28,8 @@
     "mobx": ">=6.0.0"
   },
   "dependencies": {
+    "logger": "workspace:^",
+    "ydeps": "workspace:^",
     "ytil": "workspace:^"
   },
   "devDependencies": {
