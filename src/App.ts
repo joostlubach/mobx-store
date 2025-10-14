@@ -1,6 +1,6 @@
 import Logger from 'logger'
 import { makeObservable, observable, runInAction } from 'mobx'
-import { DependencyContainer } from 'ydeps'
+import { Deps } from 'ydeps'
 import { injectDependencies } from './dependencies'
 import { registerStore } from './dispatch'
 import { deinitStores, initStores } from './lifecycle'
@@ -76,7 +76,7 @@ export class App {
 
   // #region Dependencies
 
-  public deps = new DependencyContainer()
+  public deps = new Deps()
 
   public dep(key: any) {
     if (typeof key === 'string') {
