@@ -28,11 +28,13 @@
     "mobx": ">=6.0.0"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "logger": "workspace:^",
     "ydeps": "workspace:^",
     "ytil": "workspace:^"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.20",
     "copyfiles": "^2.4.1",
     "rimraf": "^5.0.5",
     "tsc-alias": "^1.8.8",
