@@ -73,7 +73,7 @@ export async function initStores(stores: Store[], logger?: Logger, timeout: numb
     () => preinitStore(store, logger),
     timeout,
     `Pre-init of ${storeName(store)} timed out`,
-    logger
+    logger,
   ))
   await Promise.all(preInitPromises)
 
@@ -81,7 +81,7 @@ export async function initStores(stores: Store[], logger?: Logger, timeout: numb
     () => initStore(store, logger),
     timeout,
     `Init of ${storeName(store)} timed out`,
-    logger
+    logger,
   ))
 
   const results = await Promise.all(promises)
@@ -93,7 +93,7 @@ export async function deinitStores(stores: Store[], logger?: Logger, timeout: nu
     () => deinitStore(store, logger),
     timeout,
     `Deinit of ${storeName(store)} timed out`,
-    logger
+    logger,
   ))
 
   const results = await Promise.all(promises)

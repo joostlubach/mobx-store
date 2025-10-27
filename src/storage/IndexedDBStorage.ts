@@ -4,7 +4,7 @@ export class IndexedDBStorage implements AsyncStorage {
   
   constructor(
     public readonly dbName: string,
-    public readonly storeName: string = 'mobx-store'
+    public readonly storeName: string = 'mobx-store',
   ) {}
 
   public async init() {
