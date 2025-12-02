@@ -1,38 +1,43 @@
-import { isFunction } from 'lodash'
 import { metaFor } from '../meta'
 
-export function preinit(): MethodDecorator {
-  return (target, propertyKey, descriptor) => {
-    if (descriptor.value == null) { return }
-    if (!isFunction(descriptor.value)) {
-      throw new Error("preinit() can only be placed on functions")
+export function preinit() {
+  return (target: Function, context: ClassMethodDecoratorContext) => {
+    if (context.kind !== 'method') {
+      throw new Error("preinit() can only be placed on methods")
     }
 
-    const meta = metaFor(target, true)
-    meta.preinits.push(propertyKey)
+    const methodName = context.name
+    context.addInitializer(function() {
+      const meta = metaFor(this as object, true)
+      meta.preinits.push(methodName)
+    })
   }
 }
 
-export function init(): MethodDecorator {
-  return (target, propertyKey, descriptor) => {
-    if (descriptor.value == null) { return }
-    if (!isFunction(descriptor.value)) {
-      throw new Error("init() can only be placed on functions")
+export function init() {
+  return (target: Function, context: ClassMethodDecoratorContext) => {
+    if (context.kind !== 'method') {
+      throw new Error("init() can only be placed on methods")
     }
 
-    const meta = metaFor(target, true)
-    meta.inits.push(propertyKey)
+    const methodName = context.name
+    context.addInitializer(function() {
+      const meta = metaFor(this as object, true)
+      meta.inits.push(methodName)
+    })
   }
 }
 
-export function deinit(): MethodDecorator {
-  return (target, propertyKey, descriptor) => {
-    if (descriptor.value == null) { return }
-    if (!isFunction(descriptor.value)) {
-      throw new Error("deinit() can only be placed on functions")
+export function deinit() {
+  return (target: Function, context: ClassMethodDecoratorContext) => {
+    if (context.kind !== 'method') {
+      throw new Error("deinit() can only be placed on methods")
     }
 
-    const meta = metaFor(target, true)
-    meta.deinits.push(propertyKey)
+    const methodName = context.name
+    context.addInitializer(function() {
+      const meta = metaFor(this as object, true)
+      meta.deinits.push(methodName)
+    })
   }
 }

@@ -25,7 +25,7 @@
     "test": "NODE_ENV=test jest"
   },
   "peerDependencies": {
-    "mobx": ">=6.0.0"
+    "mobx": ">=6.15"
   },
   "dependencies": {
     "lodash": "^4.17.21",

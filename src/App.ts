@@ -19,7 +19,7 @@ export class App {
   // #region Lifecycle
 
   @observable
-  public status: AppStatus = AppStatus.Idle
+  public accessor status: AppStatus = AppStatus.Idle
 
   private readonly Stores: StoreConstructor<Store>[] = []
   private readonly stores: Store[] = []

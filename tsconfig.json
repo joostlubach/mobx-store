@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2022",
     "moduleResolution": "node",
     "isolatedModules": true,
 
@@ -19,7 +19,6 @@
     "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "experimentalDecorators": true,    
 
     "lib": ["ESNext", "DOM"],
   },

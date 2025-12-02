@@ -1,15 +1,17 @@
-import { isFunction } from 'ytil'
 import { metaFor } from '../meta'
 import { StoreEvent } from '../types'
 
-export function on(event: StoreEvent): MethodDecorator {
-  return (target, propertyKey, descriptor) => {
-    if (!isFunction(descriptor.value)) {
-      throw new Error(`@on() can only be placed on functions`)
+export function on(event: StoreEvent) {
+  return (target: Function, context: ClassMethodDecoratorContext) => {
+    if (context.kind !== 'method') {
+      throw new Error(`@on() can only be placed on methods`)
     }
 
-    const meta = metaFor(target, true)
-    meta.handlers[event] ??= []
-    meta.handlers[event].push(propertyKey)
+    const methodName = context.name
+    context.addInitializer(function() {
+      const meta = metaFor(this as object, true)
+      meta.handlers[event] ??= []
+      meta.handlers[event].push(methodName)
+    })
   }
 }
