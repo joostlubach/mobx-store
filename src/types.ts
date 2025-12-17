@@ -18,7 +18,7 @@ export interface StoreMeta {
   preinits: Array<string | symbol>
   inits:    Array<string | symbol>
   deinits:  Array<string | symbol | DeinitFn>
-  injects:  Record<string, [InjectKey, (from: any) => any]>
+  injects:  Record<string, [InjectKey, (from: any) => void]>
   handlers: Record<string, Array<string | symbol>>
   persist:  PersistConfig<any, any> | null
 }

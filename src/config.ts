@@ -24,7 +24,7 @@ const config: Config = {
 
 export default config
 
-export function configure(cfg: DeepPartial<Config> | ((config: Config) => any)) {
+export function configure(cfg: DeepPartial<Config> | ((config: Config) => void)) {
   if (isFunction(cfg)) {
     cfg(config)
   } else {

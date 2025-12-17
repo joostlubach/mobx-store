@@ -3,7 +3,7 @@ import { Constructor, InjectKey } from '../types'
 
 export function inject<T, U>(Ctor: Constructor<T>, transform: (from: T) => U): (target: undefined, context: ClassFieldDecoratorContext) => void
 export function inject(key: InjectKey): (target: undefined, context: ClassFieldDecoratorContext) => void
-export function inject(key: InjectKey, transform?: (from: any) => any) {
+export function inject(key: InjectKey, transform?: (from: any) => void) {
   return (target: undefined, context: ClassFieldDecoratorContext) => {
     if (context.kind !== 'field') {
       throw new Error(`@inject() can only be applied to class fields`)

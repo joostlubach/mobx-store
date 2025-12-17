@@ -3,7 +3,7 @@ import { objectEntries } from 'ytil'
 import { metaFor } from './meta'
 import { InjectKey, Store } from './types'
 
-export async function injectDependencies(store: Store, getDependency: (key: InjectKey) => any) {
+export async function injectDependencies(store: Store, getDependency: (key: InjectKey) => void) {
   const meta = metaFor(store, false)
   if (meta == null) { return }
 
