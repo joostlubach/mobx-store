@@ -43,7 +43,9 @@ export class IndexedDBStorage implements AsyncStorage {
 
   // #endregion
 
-  async getItem(key: string): Promise<object | null> {
+  // #region API
+
+  public async getItem(key: string): Promise<object | null> {
     const db = await this.db()
 
     return new Promise((resolve, reject) => {
@@ -61,7 +63,7 @@ export class IndexedDBStorage implements AsyncStorage {
     })
   }
 
-  async setItem(key: string, value: object): Promise<void> {
+  public async setItem(key: string, value: object): Promise<void> {
     const db = await this.db()
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(this.storeName, 'readwrite')
@@ -77,6 +79,25 @@ export class IndexedDBStorage implements AsyncStorage {
       }
     })
   }
+
+  public async removeItem(key: string): Promise<void> {
+    const db = await this.db()
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, 'readwrite')
+      const store = transaction.objectStore(this.storeName)
+      const request = store.delete(key)
+
+      request.onsuccess = () => {
+        resolve()
+      }
+
+      request.onerror = () => {
+        reject(request.error)
+      }
+    })
+  }
+
+  // #endregion
 
 
 }

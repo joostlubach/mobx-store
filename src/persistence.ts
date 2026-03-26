@@ -38,7 +38,7 @@ async function loadPersistedStore(store: Store) {
   if (meta?.persist == null) { return null }
   
   const {key, restore} = meta.persist
-  const state = await config.storage.getItem(key)
+  const state = await loadFromStorage(key)
   if (state == null) { return null }
   
   runInAction(() => restore(store, state))
@@ -50,7 +50,18 @@ function autopersistStore(store: Store) {
 
   const {key, persist} = meta.persist
   return reaction(() => persist(store), state => {
-    // Do cloneDeep to ensure we don't store any observables.
-    config.storage.setItem(key, cloneDeep(state))
+    saveToStorage(key, state)
   })
+}
+
+export async function loadFromStorage(key: string) {
+  return await config.storage.getItem(key)
+}
+
+export async function saveToStorage(key: string, state: object) {
+  await config.storage.setItem(key, cloneDeep(state))
+}
+
+export async function removeFromStorage(key: string) {
+  await config.storage.removeItem(key)
 }
