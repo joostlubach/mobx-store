@@ -1,14 +1,26 @@
 import { AsyncStorage } from '../config'
 
-export class IndexedDBStorage implements AsyncStorage {
+export class IndexedDBStorage<R extends object = object> implements AsyncStorage {
   
   constructor(
     public readonly dbName: string,
-    public readonly storeName: string = 'mobx-store',
+    private readonly options: IndexedDBStorageOptions<R> = {},
   ) {}
 
   public async init() {
     await this.openDatabase()
+  }
+
+  private get storeName() {
+    return this.options.storeName ?? 'mobx-store'
+  }
+
+  private encode(value: object): R {
+    return this.options.encode ? this.options.encode(value) : value as R
+  }
+
+  private decode(value: R): object {
+    return this.options.decode ? this.options.decode(value) : value as object
   }
 
   // #region Open
@@ -54,7 +66,11 @@ export class IndexedDBStorage implements AsyncStorage {
       const request = store.get(key)
 
       request.onsuccess = () => {
-        resolve(request.result ?? null)
+        if (request.result == null) {
+          resolve(null)
+        } else {
+          resolve(this.decode(request.result))
+        }
       }
 
       request.onerror = () => {
@@ -68,7 +84,8 @@ export class IndexedDBStorage implements AsyncStorage {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(this.storeName, 'readwrite')
       const store = transaction.objectStore(this.storeName)
-      const request = store.put(value, key)
+      const encoded = this.encode(value)
+      const request = store.put(encoded, key)
 
       request.onsuccess = () => {
         resolve()
@@ -100,4 +117,10 @@ export class IndexedDBStorage implements AsyncStorage {
   // #endregion
 
 
+}
+
+export interface IndexedDBStorageOptions<R> {
+  storeName?: string
+  encode?: (value: object) => R
+  decode?: (raw: R) => object
 }

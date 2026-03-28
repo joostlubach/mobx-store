@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash'
 import { action, reaction, runInAction } from 'mobx'
 import config from './config'
 import { metaFor } from './meta'
@@ -59,7 +58,7 @@ export async function loadFromStorage(key: string) {
 }
 
 export async function saveToStorage(key: string, state: object) {
-  await config.storage.setItem(key, cloneDeep(state))
+  await config.storage.setItem(key, state)
 }
 
 export async function removeFromStorage(key: string) {
