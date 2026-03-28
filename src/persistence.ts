@@ -64,3 +64,7 @@ export async function saveToStorage(key: string, state: object) {
 export async function removeFromStorage(key: string) {
   await config.storage.removeItem(key)
 }
+
+export async function clearStorage() {
+  await config.storage.clear()
+}

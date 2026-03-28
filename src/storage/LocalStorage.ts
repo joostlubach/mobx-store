@@ -20,4 +20,8 @@ export class LocalStorage {
     localStorage.removeItem(key) 
   }
 
+  public clear() {
+    localStorage.clear()
+  }
+
 }

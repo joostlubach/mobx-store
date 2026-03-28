@@ -114,6 +114,23 @@ export class IndexedDBStorage<R extends object = object> implements AsyncStorage
     })
   }
 
+  public async clear() {
+    const db = await this.db()
+    return new Promise<void>((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, 'readwrite')
+      const store = transaction.objectStore(this.storeName)
+      const request = store.clear()
+
+      request.onsuccess = () => {
+        resolve()
+      }
+
+      request.onerror = () => {
+        reject(request.error)
+      }
+    })
+  }
+
   // #endregion
 
 
