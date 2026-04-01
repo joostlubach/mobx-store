@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash'
 import { action, reaction, runInAction } from 'mobx'
 import config from './config'
 import { metaFor } from './meta'
@@ -49,7 +50,7 @@ function autopersistStore(store: Store) {
 
   const {key, persist} = meta.persist
   return reaction(() => persist(store), state => {
-    saveToStorage(key, state)
+    saveToStorage(key, cloneDeep(state))
   })
 }
 
