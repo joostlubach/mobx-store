@@ -68,7 +68,7 @@ export async function deinitStore(store: Store, logger?: Logger) {
   }
 }
 
-export async function initStores(stores: Store[], logger?: Logger, timeout: number = 5000): Promise<boolean> {
+export async function initStores(stores: Store[], logger?: Logger, timeout: number | null = null): Promise<boolean> {
   const preInitPromises = stores.map(store => runAsyncWithTimeout(
     () => preinitStore(store, logger),
     timeout,
@@ -100,7 +100,7 @@ export async function deinitStores(stores: Store[], logger?: Logger, timeout: nu
   return results.every(it => it)
 }
 
-function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: string, logger?: Logger): Promise<boolean> {
+function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number | null, message: string, logger?: Logger): Promise<boolean> {
   return new Promise((resolve, reject) => {
     let resolved: boolean = false
 
@@ -117,7 +117,9 @@ function runAsyncWithTimeout(fn: () => Promise<any>, timeout: number, message: s
       resolve(false)
     }
 
-    setTimeout(onTimeout, timeout)
+    if (timeout != null) {
+      setTimeout(onTimeout, timeout)
+    }
     fn().then(onSuccess).catch(reject)  
   })
 }
