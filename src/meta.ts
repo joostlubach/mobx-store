@@ -5,17 +5,14 @@ const META = new Map<Store, StoreMeta>()
 export function metaFor(store: Store, createIfNotFound: false): StoreMeta | undefined
 export function metaFor(store: Store, createIfNotFound: true): StoreMeta
 export function metaFor(store: Store, createIfNotFound: boolean) {
-  const StoreClass = store instanceof Function ? store : store.constructor
-
-  let meta = META.get(StoreClass)
+  let meta = META.get(store)
   if (meta == null && createIfNotFound) {
-    META.set(StoreClass, meta = StoreMeta.empty())
+    META.set(store, meta = StoreMeta.empty())
   }
 
   return meta
 }
 
 export function storeName(store: Store | StoreConstructor<any>) {
-  const StoreClass = store instanceof Function ? store : store.constructor
-  return metaFor(StoreClass, true).name
+  return metaFor(store instanceof Function ? store : store.constructor, true).name
 }
