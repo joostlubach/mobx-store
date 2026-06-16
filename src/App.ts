@@ -1,6 +1,6 @@
-import Logger from 'logger'
 import { makeObservable, observable, runInAction } from 'mobx'
 import { Deps } from 'ydeps'
+import config from './config'
 import { injectDependencies } from './dependencies'
 import { registerStore } from './dispatch'
 import { deinitStores, initStores } from './lifecycle'
@@ -13,8 +13,6 @@ export class App {
   constructor() {
     makeObservable(this)
   }
-
-  protected readonly logger = new Logger('App')
 
   // #region Lifecycle
 
@@ -40,7 +38,7 @@ export class App {
       this.stores.push(store)
       this.deps.provide(Store, () => store)
       registerStore(store)
-      this.logger.debug(`Registered store: ${storeName(Store)}`)
+      config.logger.debug(`Registered store: ${storeName(Store)}`)
     }
 
     // Inject store dependencies.
@@ -51,9 +49,9 @@ export class App {
     await persistStores(this.stores)
     
     // Then, initialize all stores.
-    const initialized = await initStores(this.stores, this.logger)
+    const initialized = await initStores(this.stores)
     if (initialized) {
-      this.logger.info('Initialized')
+      config.logger.info('Initialized')
     }
 
     await initializer?.()
@@ -69,7 +67,7 @@ export class App {
     this.disposers.forEach(it => it())
     this.disposers = []
 
-    return await deinitStores(this.stores, this.logger)
+    return await deinitStores(this.stores)
   }
 
   // #endregion

@@ -10,8 +10,8 @@ export function on(event: StoreEvent) {
     const methodName = context.name
     context.addInitializer(function () {
       const meta = metaFor(this as object, true)
-      meta.handlers[event] ??= []
-      meta.handlers[event].push(methodName)
+      meta.handlers[event] ??= new Set()
+      meta.handlers[event].add(methodName)
     })
   }
 }

@@ -1,18 +1,21 @@
 import { Store, StoreConstructor, StoreMeta } from './types'
 
-const META = new Map<Store, StoreMeta>()
+const META = new Map<StoreConstructor<any>, StoreMeta>()
 
 export function metaFor(store: Store, createIfNotFound: false): StoreMeta | undefined
 export function metaFor(store: Store, createIfNotFound: true): StoreMeta
 export function metaFor(store: Store, createIfNotFound: boolean) {
-  let meta = META.get(store)
+  const StoreClass = (store instanceof Function ? store : store.constructor) as StoreConstructor<any>
+
+  let meta = META.get(StoreClass)
   if (meta == null && createIfNotFound) {
-    META.set(store, meta = StoreMeta.empty())
+    META.set(StoreClass, meta = StoreMeta.empty())
   }
 
   return meta
 }
 
 export function storeName(store: Store | StoreConstructor<any>) {
-  return metaFor(store instanceof Function ? store : store.constructor, true).name
+  const StoreClass = store instanceof Function ? store : store.constructor
+  return metaFor(StoreClass, true).name
 }

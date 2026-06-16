@@ -4,6 +4,14 @@ import { LocalStorage } from './storage'
 
 export interface Config {
   storage: SyncStorage | AsyncStorage
+  logger: Logger
+}
+
+export interface Logger {
+  debug: (message: string, ...meta: any[]) => void
+  info:  (message: string, ...meta: any[]) => void
+  warn:  (message: string, ...meta: any[]) => void
+  error: (message: string, ...meta: any[]) => void
 }
 
 export interface SyncStorage {
@@ -24,6 +32,7 @@ export interface AsyncStorage {
 
 const config: Config = {
   storage: new LocalStorage(),
+  logger: console,
 }
 
 export default config

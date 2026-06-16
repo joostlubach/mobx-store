@@ -9,7 +9,7 @@ export function preinit() {
     const methodName = context.name
     context.addInitializer(function () {
       const meta = metaFor(this as object, true)
-      meta.preinits.push(methodName)
+      meta.preinits.add(methodName)
     })
   }
 }
@@ -23,7 +23,7 @@ export function init() {
     const methodName = context.name
     context.addInitializer(function () {
       const meta = metaFor(this as object, true)
-      meta.inits.push(methodName)
+      meta.inits.add(methodName)
     })
   }
 }
@@ -37,7 +37,7 @@ export function deinit() {
     const methodName = context.name
     context.addInitializer(function () {
       const meta = metaFor(this as object, true)
-      meta.deinits.push(methodName)
+      meta.deinits.add(methodName)
     })
   }
 }

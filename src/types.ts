@@ -15,11 +15,14 @@ export type InjectKey = Function | string
 
 export interface StoreMeta {
   name?:    string
-  preinits: Array<string | symbol>
-  inits:    Array<string | symbol>
-  deinits:  Array<string | symbol | DeinitFn>
+  preinits: Set<string | symbol>
+  inits:    Set<string | symbol>
+  deinits:  Set<string | symbol>
+
+  deinitsByInstance: WeakMap<Store, DeinitFn[]>
+
   injects:  Record<string, [InjectKey, (from: any) => void]>
-  handlers: Record<string, Array<string | symbol>>
+  handlers: Record<string, Set<string | symbol>>
   persist:  PersistConfig<any, any> | null
 }
 
@@ -27,9 +30,10 @@ export const StoreMeta: {
   empty: () => StoreMeta
 } = {
   empty: () => ({
-    preinits: [],
-    inits:    [],
-    deinits:  [],
+    preinits: new Set(),
+    inits:    new Set(),
+    deinits:  new Set(),
+    deinitsByInstance: new WeakMap(),
     injects:  {},
     handlers: {},
     persist:  null,
