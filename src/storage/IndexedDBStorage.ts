@@ -1,5 +1,11 @@
 import { AsyncStorage } from '../config'
 
+let $indexedDB = globalThis.indexedDB
+
+export function setIndexedDBFactory(factory: IDBFactory) {
+  $indexedDB = factory
+}
+
 export class IndexedDBStorage<R extends object = object> implements AsyncStorage {
   
   constructor(
@@ -33,7 +39,7 @@ export class IndexedDBStorage<R extends object = object> implements AsyncStorage
 
   private openDatabase(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1)
+      const request = $indexedDB.open(this.dbName, 1)
       const storeName = this.storeName
 
       request.onupgradeneeded = () => {
