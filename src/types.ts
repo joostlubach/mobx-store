@@ -30,13 +30,13 @@ export const StoreMeta: {
   empty: () => StoreMeta
 } = {
   empty: () => ({
-    preinits: new Set(),
-    inits:    new Set(),
-    deinits:  new Set(),
+    preinits:          new Set(),
+    inits:             new Set(),
+    deinits:           new Set(),
     deinitsByInstance: new WeakMap(),
-    injects:  {},
-    handlers: {},
-    persist:  null,
+    injects:           {},
+    handlers:          {},
+    persist:           null,
   }),
 }
 
@@ -48,8 +48,6 @@ export interface PersistConfig<TStore extends Store, TState> {
 
 export type PersistFunction<TStore extends Store, TState> = (store: TStore) => TState | Promise<TState>
 export type RestoreFunction<TStore extends Store, TState> = (store: TStore, state: TState) => void
-
-export type StoreEvent = keyof {[K in keyof StoreEventMap as true extends StoreEventMap[K] ? K : never]: any}
 
 // The following are extendable by client code.
 export interface StoreEventMap {}

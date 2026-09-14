@@ -1,7 +1,7 @@
 import { metaFor } from '../meta'
-import { StoreEvent } from '../types'
+import { StoreEventMap } from '../types'
 
-export function on(event: StoreEvent) {
+export function on<E>(event: keyof StoreEventMap) {
   return (target: Function, context: ClassMethodDecoratorContext) => {
     if (context.kind !== 'method') {
       throw new Error(`@on() can only be placed on methods`)
