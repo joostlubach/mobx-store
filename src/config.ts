@@ -32,7 +32,7 @@ export interface AsyncStorage {
 
 const config: Config = {
   storage: new LocalStorage(),
-  logger: console,
+  logger:  console,
 }
 
 export default config
