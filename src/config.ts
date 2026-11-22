@@ -1,5 +1,5 @@
 import { isFunction, merge } from 'lodash'
-import { DeepPartial } from 'ytil'
+import { DeepPartial } from '@mosdev/ytil'
 import { LocalStorage } from './storage'
 
 export interface Config {

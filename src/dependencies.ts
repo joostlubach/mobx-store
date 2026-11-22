@@ -1,5 +1,5 @@
 import { isFunction } from 'lodash'
-import { objectEntries } from 'ytil'
+import { objectEntries } from '@mosdev/ytil'
 import { metaFor } from './meta'
 import { InjectKey, Store } from './types'
 

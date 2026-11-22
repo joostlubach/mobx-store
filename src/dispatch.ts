@@ -1,4 +1,4 @@
-import { isFunction } from 'ytil'
+import { isFunction } from '@mosdev/ytil'
 import { metaFor } from './meta'
 import { Store, StoreEventMap } from './types'
 

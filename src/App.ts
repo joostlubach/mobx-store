@@ -1,5 +1,5 @@
 import { makeObservable, observable, runInAction } from 'mobx'
-import { Deps } from 'ydeps'
+import { Deps } from '@mosdev/ydeps'
 import config from './config'
 import { injectDependencies } from './dependencies'
 import { registerStore } from './dispatch'
